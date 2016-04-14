@@ -63,7 +63,7 @@ function phone_field_info() {
       'instance_settings' => array(
         'phone_country_code' => 0,
         'phone_default_country_code' => '1',
-        'phone_int_max_length' => 15,
+        'phone_int_max_length' => 16,
         'ca_phone_separator' => '-',
         'ca_phone_parentheses' => 1,
       ),
@@ -125,7 +125,7 @@ function phone_field_instance_settings_form($field, $instance) {
     );
     $form['phone_int_max_length'] = array(
       '#type' => 'textfield',
-      '#title' => t('Maximum length of international numbers, according to the ITU this is 15'),
+      '#title' => t('Maximum length of international numbers, according to the ITU this is 15 - not including the leading + sign.'),
       '#default_value' => $settings['phone_int_max_length'],
     );
   }
