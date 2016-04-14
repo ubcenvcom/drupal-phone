@@ -3,7 +3,7 @@
 function phone_int_metadata() {
   // These strings are translated using t() on output.
   return array(
-    'error' => '"%value" is not a valid Italian phone number<br>Italian phone numbers should only ...',
+    'error' => '"%value" is not a valid phone number.',
   );
 }
 
