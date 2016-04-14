@@ -18,7 +18,7 @@ function phone_int_metadata() {
  * @return
  *   TRUE if valid, FALSE if otherwise.
  */
-function valid_int_phone_number($phonenumber) {
+function valid_int_phone_number($phonenumber, &$error) {
   $phonenumber = trim($phonenumber);
   if ($phonenumber === '') {
     return FALSE;
@@ -26,10 +26,10 @@ function valid_int_phone_number($phonenumber) {
   $phonenumber = _normalize_country_code($phonenumber);
   $base_phonenumber = str_replace(array('.', '(', ')', '[', ']', '-', '+', ' '), '', $phonenumber);
   if (!isset($field['phone_int_max_length'])) {
-    $field['phone_int_max_length'] = 15;
+    $field['phone_int_max_length'] = 16;
   }
   if (strlen($base_phonenumber) > $field['phone_int_max_length']) {
-    $error = t('Invalid international phone number: Phone number is too long; international phone numbers are limited to 15 digits.');
+    $error = t('Invalid international phone number: Phone number is too long; international phone numbers are limited to 16 digits.');
     return FALSE;
   }
   // Check if digits are used in the base_phonenumber
@@ -41,10 +41,7 @@ function valid_int_phone_number($phonenumber) {
   preg_match('/^\+(\d+)/', $phonenumber, $matches);
   $cc = $matches[1];
   if (strlen($cc) > 3) {
-    $error = array(
-      t('Invalid international phone number: Country code "+%cc" is too long; valid country codes are three digits or less.'),
-      array('%cc' => $cc)
-    );
+    $error = t('Invalid international phone number: Country code "+%cc" is too long; valid country codes are three digits or less.', array('%cc' => $cc));
     return FALSE;
   }
   

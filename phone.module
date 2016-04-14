@@ -154,11 +154,16 @@ function phone_field_validate($entity_type, $entity, $field, $instance, $langcod
     if (isset($item['value']) && $item['value'] != '') {
       $ccode = $field['settings']['country'];
       $value = $item['value'];
-      if (!valid_phone_number($ccode, $value)) {
+      $error = false;
+      if (!valid_phone_number($ccode, $value, $error)) {
         $country = phone_country_info($ccode);
+
+	// Did country validator give a more specific error, if so use it
+	$err=is_string($error) ? $error : t($country['error'], array('%value' => $value));
+
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'phone_invalid_number',
-          'message' => t($country['error'], array('%value' => $value)),
+          'message' => $err
         );
       }
     }
@@ -343,7 +348,7 @@ function phone_country_info($countrycode = NULL) {
  * @param string $phonenumber
  * @return boolean Returns boolean FALSE if the phone number is not valid.
  */
-function valid_phone_number($countrycode, $phonenumber) {
+function valid_phone_number($countrycode, $phonenumber, &$error) {
 
   $countrycode = trim($countrycode);
   $phonenumber = trim($phonenumber);
@@ -353,7 +358,7 @@ function valid_phone_number($countrycode, $phonenumber) {
     module_load_include('inc', 'phone', 'include/phone.'. $countrycode);
 
     if (function_exists($valid_phone_function)) {
-       return $valid_phone_function($phonenumber);
+       return $valid_phone_function($phonenumber, $error);
     }
   }
   //Country not taken into account yet
